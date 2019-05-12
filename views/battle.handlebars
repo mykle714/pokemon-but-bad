@@ -33,13 +33,17 @@
         while (document.getElementsByTagName("div"))
             document.getElementsByTagName("body")[0].removeChild(document.getElementsByTagName("div")[0]);
         }
-    function spawn(player) {
+    function spawn(player,type) {
+        var types;
+        var colors;
+        var index = types.indexOf(type)
         a = document.createElement("div")
-		if(player == 1) {
+        if(player == 1) {
         	a.setAttribute("class", "one")
-		} else if(player == 2) {
-			a.setAttribute("class", "two")
-		}
+	} else if(player == 2) {
+		a.setAttribute("class", "two")
+	}
+        a.color = colors[index]
         document.getElementsByTagName("body")[0].appendChild(a);
     }
 
@@ -60,14 +64,14 @@
     	return false;
 	});
 
-	socket.on('action1', function(hp2) {
+	socket.on('action1', function(hp2,type) {
 		console.log("hp2: "+hp2)
-		spawn(1)
+		spawn(1,type)
   	});
 
-	socket.on('action2', function(hp1) {
+	socket.on('action2', function(hp1,type) {
 		console.log("hp1: "+hp1)
-		spawn(2)
+		spawn(2,type)
   	});
 
 	socket.on('win', function(player) {
