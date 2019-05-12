@@ -170,7 +170,7 @@ app.get('/pokemon', function(req, res) {
   })
 });
 
-var factor = 0.1
+var factor = 0.01
 
 io.on('connection', function(socket) {
 	socket.on('action1', function(index) {
@@ -178,7 +178,7 @@ io.on('connection', function(socket) {
     var atk_type = move["type"]["name"]
     players[1]["hp"] = players[1]["hp"] - factor*move["power"]*calc(atk_type, players[1]["types"])
     if(players[1]["hp"] > 0) {
-      io.emit('action1', players[1]["hp"]);
+      io.emit('action1', players[1]["hp"],atk_type);
     } else {
       io.emit('win', 1);
     }
@@ -188,7 +188,7 @@ io.on('connection', function(socket) {
     var atk_type = move["type"]["name"]
     players[0]["hp"] = players[0]["hp"] - factor*move["power"]*calc(atk_type, players[0]["types"])
     if(players[0]["hp"] > 0) {
-      io.emit('action2', players[0]["hp"]);
+      io.emit('action2', players[0]["hp"],atk_type);
     } else {
       io.emit('win', 2);
     }
