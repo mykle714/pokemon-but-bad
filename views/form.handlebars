@@ -1,0 +1,36 @@
+<body>
+	<img src={{pokemon.sprite}} alt="" id="img">
+	<br>
+	<form method="GET" action="/register">
+		Player:
+		<br>
+		<input type="radio" name="numb" onchange="change();" value="1">1
+		<input type="radio" name="numb" onchange="change();" value="2">2
+		<br>
+		Moves:
+		<br>
+		<input name="move1" list="moves">
+		<br>
+		<input name="move2" list="moves">
+		<br>
+		<input name="move3" list="moves">
+		<br>
+		<input name="move4" list="moves">
+		<br>
+		<input type="hidden" name="name" value="{{pokemon.name}}">
+		<button type="submit" id="done">Done</button>
+	</form>
+
+	<datalist id="moves">
+		{{#each pokemon.moves}}
+			<option value={{this}}>
+		{{/each}}
+	</datalist>
+
+	<script>
+		function change() {
+			document.cookie = "numb="+document.querySelector('input[name="numb"]:checked').value +";path=/battle"
+			console.log(document.cookie)
+		}
+	</script>
+</body>

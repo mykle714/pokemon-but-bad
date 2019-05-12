@@ -1,0 +1,78 @@
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+<head>
+	<link rel="stylesheet" type="text/css" href="/public/css/battle.css">
+</head>
+
+<br>
+<input type="text" id="in" autofocus>
+<br>
+<img src="{{p1.url}}" alt="" id="sprite1">
+<div id="hp1"></div>
+<br>
+<img src="{{p2.url}}" alt="" id="sprite2">
+<div id="hp2"></div>
+<div id="winner" style="display: none"></div>
+
+<script>
+	var socket = io();
+	var temp = document.cookie.split(";")
+	var temp2 = []
+	var done = false
+	for(var i = 0; i< temp.length; i++) {
+		temp2.push(temp[i].split("="))
+	}
+	var numb
+	for(var i = 0; i < temp2.length; i++) {
+		if(temp2[i][0] === "numb") {
+			numb = temp2[i][1]
+		}
+	}
+	function clear() {
+        while (document.getElementsByTagName("div"))
+            document.getElementsByTagName("body")[0].removeChild(document.getElementsByTagName("div")[0]);
+        }
+    function spawn(player) {
+        a = document.createElement("div")
+		if(player == 1) {
+        	a.setAttribute("class", "one")
+		} else if(player == 2) {
+			a.setAttribute("class", "two")
+		}
+        document.getElementsByTagName("body")[0].appendChild(a);
+    }
+
+	document.getElementById("sprite1").height = {{p1.height}}*10
+	document.getElementById("sprite2").height = {{p2.height}}*10
+
+	$('#in').keyup(function() {
+		if(!done){
+			var p = JSON.parse(`{{{json}}}`)
+			var char = $("#in").val()
+			var len = char.length
+			var last = "qwer".indexOf(char[char.length-1])
+			if(last != -1) {
+				socket.emit('action'+numb, last);
+			}
+		}
+    	$("#in").val('');
+    	return false;
+	});
+
+	socket.on('action1', function(hp2) {
+		console.log("hp2: "+hp2)
+		spawn(1)
+  	});
+
+	socket.on('action2', function(hp1) {
+		console.log("hp1: "+hp1)
+		spawn(2)
+  	});
+
+	socket.on('win', function(player) {
+		document.getElementById("winner").style["display"] = "block"
+		document.getElementById("winner").innerHTML = "player "+player+" wins!"
+		done = true
+  	});
+</script>

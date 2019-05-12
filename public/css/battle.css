@@ -1,0 +1,106 @@
+@keyframes test1 {
+	0% {
+		background-color: red;
+		left: 10%;
+		top: 50%;
+	}
+
+	99% {
+		background-color: red;
+		left: 90%;
+		top: 50%;
+	}
+
+	100% {
+		background-color: white;
+		left: 90%;
+		top: 50%;
+		z-index: -1;
+	}
+}
+
+@keyframes test2 {
+	0% {
+		background-color: red;
+		left: 90%;
+		top: 50%;
+	}
+
+	99% {
+		background-color: red;
+		left: 10%;
+		top: 50%;
+	}
+
+	100% {
+		background-color: white;
+		left: 10%;
+		top: 50%;
+		z-index: -1;
+	}
+}
+
+.one {
+	background-color: red;
+	position: absolute;
+	height: 50px;
+	width: 50px;
+	animation-name: test1;
+	animation-duration: 1s;
+	animation-timing-function: ease-in;
+	animation-fill-mode: forwards;
+	animation-iteration-count: 1;
+}
+
+
+.two {
+	background-color: red;
+	position: absolute;
+	height: 50px;
+	width: 50px;
+	animation-name: test2;
+	animation-duration: 1s;
+	animation-timing-function: ease-in;
+	animation-fill-mode: forwards;
+	animation-iteration-count: 1;
+}
+
+#sprite1 {
+	position: absolute;
+	left: 10%;
+	top: 50%;
+	transform: scaleX(-1);
+}
+
+#sprite2 {
+	position: absolute;
+	left: 90%;
+	top: 50%;
+}
+
+#hp1 {
+	position: absolute;
+	color: green;
+	width: 15%;
+	height: 5%;
+	left: 10%;
+	top: 75%;
+}
+
+#hp2 {
+	position: absolute;
+	color: green;
+	width: 15%;
+	height: 5%;
+	right: 10%;
+	top: 75%;
+}
+
+#winner {
+	position: absolute;
+	width: 20%;
+	height: 10%;
+	font-size: 100%;
+	left: 40%;
+	top: 45%;
+}
