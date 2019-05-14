@@ -1,5 +1,9 @@
 <body>
-	<img src="{{mon.url}}" id="img">
+	{{#if mon.flags.nullURL}}
+		url not found
+	{{else}}
+		<img src="{{mon.url}}" id="img">
+	{{/if}}
 	<br>
 	<form method="GET" action="/register">
 		Player:

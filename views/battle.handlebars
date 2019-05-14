@@ -9,9 +9,11 @@
 <input type="text" id="in" autofocus>
 <br>
 <img src="{{p1.url}}" id="sprite1">
+<div id="hptext1">100%</div>
 <div id="hp1"></div>
 <br>
 <img src="{{p2.url}}" id="sprite2">
+<div id="hptext2">100%</div>
 <div id="hp2"></div>
 <div id="winner" style="display: none"></div>
 
@@ -30,9 +32,14 @@
 		}
 	}
 	function clear() {
-        while (document.getElementsByTagName("div"))
-            document.getElementsByTagName("body")[0].removeChild(document.getElementsByTagName("div")[0]);
-        }
+		//apparenrlt thisdoesnt work rn
+        while (document.getElementsByClassName("one")) {
+            document.getElementsByTagName("body")[0].removeChild(document.getElementsByClassName("one")[0])
+		}
+		while (document.getElementsByClassName("two")) {
+            document.getElementsByTagName("body")[0].removeChild(document.getElementsByClassName("two")[0])
+		}
+	}
     function spawn(player,type) {
 		var types=["normal","fighting","flying","poison","ground","rock","bug","ghost","steel","fire","water","grass","electric","pychic","ice","dragon","dark","fairy"]
         var colors=["LightGray", "maroon", "LightSkyBlue", "Purple", "SaddleBrown", "DarkGoldenrod", "Olive", "DarkSlateBlue", "Gray", "Crimson", "RoyalBlue", "LimeGreen", "Gold", "HotPink", "CornflowerBlue", "Navy", "DarkSlateGray", "Violet"]
@@ -40,12 +47,12 @@
         a = document.createElement("div")
         if(player == 1) {
         	a.setAttribute("class", "one")
-	} else if(player == 2) {
-		a.setAttribute("class", "two")
+		} else if(player == 2) {
+			a.setAttribute("class", "two")
+		}
+		a.style["background-color"] = colors[index]
+		document.getElementsByTagName("body")[0].appendChild(a);
 	}
-        a.style["background-color"] = colors[index]
-        document.getElementsByTagName("body")[0].appendChild(a);
-    }
 
 	document.getElementById("sprite1").height = {{p1.height}}*10
 	document.getElementById("sprite2").height = {{p2.height}}*10
@@ -64,21 +71,29 @@
     	return false;
 	});
 
-	socket.on('action1', function(hp2,type) {
-		document.getElementById("hp2").style["width"] = ((Math.max(0,hp2)/100)*15) + "%"
-		console.log("hp2: " + Math.max(0,hp2))
-		spawn(1,type)
+	socket.on('action1', function(hp,type) {
+		document.getElementById("hp2").style["width"] = ((Math.max(0,hp)/100)*15) + "%";
+		document.getElementById("hptext2").innerHTML = Number.parseFloat(Math.max(0,hp)).toPrecision(2) + "%";
+		console.log(Math.max(0,hp/100));
+		spawn(1,type);
   	});
 
-	socket.on('action2', function(hp1,type) {
-		document.getElementById("hp1").style["width"] = ((Math.max(0,hp1)/100)*15) + "%"
-		console.log("hp1: " + Math.max(0,hp1))
-		spawn(2,type)
+	socket.on('action2', function(hp,type) {
+		document.getElementById("hp1").style["width"] = ((Math.max(0,hp)/100)*15) + "%";
+		document.getElementById("hptext1").innerHTML = Number.parseFloat(Math.max(0,hp)).toPrecision(2) + "%";
+		console.log(Math.max(0,hp/100));
+		spawn(2,type);
   	});
 
 	socket.on('win', function(player) {
 		document.getElementById("winner").style["display"] = "block"
 		document.getElementById("winner").innerHTML = "player "+player+" wins!"
 		done = true
+		//clear()
+		if(player == 1) {
+			document.getElementById("hp2").style["display"] = "hidden"
+		} else if(player == 2) {
+			document.getElementById("hp1").style["display"] = "hidden"
+		}
   	});
 </script>

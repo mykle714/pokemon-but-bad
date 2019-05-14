@@ -6,7 +6,8 @@ var pokemonSchema = new mongoose.Schema({
     moves: [String],
     url: String,
     stats: [Number],
-    types: [String]
+    types: [String],
+    flags: {type: Map, of: Boolean}
 });
 
 var Pokemon = mongoose.model('Pokemon', pokemonSchema);

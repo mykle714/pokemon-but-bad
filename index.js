@@ -119,9 +119,16 @@ app.post('/add', function(req, res) {
             moves: m,
             url: json["sprites"]["front_default"],
             stats: s,
-            types: t
+            types: t,
+            flags: {}
           })
-              
+
+          if(pokemon["url"] == null) {
+            pokemon["flags"]["nullURL"] = true
+          } else {
+            pokemon["flags"]["nullURL"] = false
+          }
+
           pokemon.save(function(err) {
             if(err) throw err
             res.render('form',{mon: pokemon})

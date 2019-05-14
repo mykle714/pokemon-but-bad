@@ -1,45 +1,50 @@
+:root {
+	--margin: 10%;
+	--lineup: 20%
+}
+
 @keyframes test1 {
 	0% {
-		left: 10%;
-		top: 50%;
+		left: var(--margin);
+		bottom: var(--lineup);
 	}
 
 	99% {
-		left: 90%;
-		top: 50%;
+		left: calc(100% - var(--margin));
+		bottom: var(--lineup);
 	}
 
 	100% {
-		background-color: white;
-		left: 90%;
-		top: 50%;
+		background-color: transparent;
+		left: calc(100% - var(--margin));
+		bottom: var(--lineup);
 		z-index: -1;
 	}
 }
 
 @keyframes test2 {
 	0% {
-		left: 90%;
-		top: 50%;
+		right: var(--margin);
+		bottom: var(--lineup);
 	}
 
 	99% {
-		left: 10%;
-		top: 50%;
+		right: calc(100% - var(--margin));
+		bottom: var(--lineup);
 	}
 
 	100% {
-		background-color: white;
-		left: 10%;
-		top: 50%;
+		background-color: transparent;
+		right: calc(100% - var(--margin));
+		bottom: var(--lineup);
 		z-index: -1;
 	}
 }
 
 .one {
 	position: absolute;
-	height: 50px;
-	width: 50px;
+	height: 5vh;
+	width: 5vh;
 	animation-name: test1;
 	animation-duration: 1s;
 	animation-timing-function: ease-in;
@@ -50,8 +55,8 @@
 
 .two {
 	position: absolute;
-	height: 50px;
-	width: 50px;
+	height: 5vh;
+	width: 5vh;
 	animation-name: test2;
 	animation-duration: 1s;
 	animation-timing-function: ease-in;
@@ -61,15 +66,29 @@
 
 #sprite1 {
 	position: absolute;
-	left: 10%;
-	top: 50%;
+	left: var(--margin);
+	bottom: var(--lineup);
 	transform: scaleX(-1);
 }
 
 #sprite2 {
 	position: absolute;
-	right: 10%;
-	top: 50%;
+	right: var(--margin);
+	bottom: var(--lineup);
+}
+
+#hptext1 {
+	position: absolute;
+	right: calc(100% - var(--margin));
+	bottom: calc(var(--lineup) - 10%);
+	color: black
+}
+
+#hptext2 {
+	position: absolute;
+	left: calc(100% - var(--margin));
+	bottom: calc(var(--lineup) - 10%);
+	color: black
 }
 
 #hp1 {
@@ -77,8 +96,8 @@
 	background-color: green;
 	width: 15%;
 	height: 5%;
-	left: 10%;
-	top: 75%;
+	left: var(--margin);
+	bottom: calc(var(--lineup) - 10%);
 }
 
 #hp2 {
@@ -86,14 +105,14 @@
 	background-color: green;
 	width: 15%;
 	height: 5%;
-	right: 10%;
-	top: 75%;
+	right: var(--margin);
+	bottom: calc(var(--lineup) - 10%);
 }
 
 #winner {
 	position: absolute;
-	width: 20%;
-	height: 10%;
+	width: 30%;
+	height: 20%;
 	font-size: 100%;
 	left: 40%;
 	top: 45%;
