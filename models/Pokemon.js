@@ -4,7 +4,7 @@ var pokemonSchema = new mongoose.Schema({
     name: String,
     height: Number,
     moves: [String],
-    sprite: String,
+    url: String,
     stats: [Number],
     types: [String]
 });

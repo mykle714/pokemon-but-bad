@@ -1,12 +1,10 @@
 @keyframes test1 {
 	0% {
-		background-color: red;
 		left: 10%;
 		top: 50%;
 	}
 
 	99% {
-		background-color: red;
 		left: 90%;
 		top: 50%;
 	}
@@ -21,13 +19,11 @@
 
 @keyframes test2 {
 	0% {
-		background-color: red;
 		left: 90%;
 		top: 50%;
 	}
 
 	99% {
-		background-color: red;
 		left: 10%;
 		top: 50%;
 	}
@@ -41,7 +37,6 @@
 }
 
 .one {
-	background-color: red;
 	position: absolute;
 	height: 50px;
 	width: 50px;
@@ -54,7 +49,6 @@
 
 
 .two {
-	background-color: red;
 	position: absolute;
 	height: 50px;
 	width: 50px;
@@ -74,13 +68,13 @@
 
 #sprite2 {
 	position: absolute;
-	left: 90%;
+	right: 10%;
 	top: 50%;
 }
 
 #hp1 {
 	position: absolute;
-	color: green;
+	background-color: green;
 	width: 15%;
 	height: 5%;
 	left: 10%;
@@ -89,7 +83,7 @@
 
 #hp2 {
 	position: absolute;
-	color: green;
+	background-color: green;
 	width: 15%;
 	height: 5%;
 	right: 10%;
