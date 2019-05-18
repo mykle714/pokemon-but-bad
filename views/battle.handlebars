@@ -54,35 +54,31 @@
 		document.getElementsByTagName("body")[0].appendChild(a);
 	}
 
-	document.getElementById("sprite1").height = {{p1.height}}*10
-	document.getElementById("sprite2").height = {{p2.height}}*10
+	var factor = 20
+	document.getElementById("sprite1").style["height"] = Math.ceil(70*(1-Math.exp(-{{p1.height}}/factor))) + "%"
+	document.getElementById("sprite2").style["height"] = Math.ceil(70*(1-Math.exp(-{{p2.height}}/factor))) + "%"
 
 	$('#in').keyup(function() {
-		if(!done){
+		if(!done && numb != 3){
 			var p = JSON.parse(`{{{json}}}`)
 			var char = $("#in").val()
 			var len = char.length
 			var last = "qwer".indexOf(char[char.length-1])
 			if(last != -1) {
-				socket.emit('action'+numb, last);
+				socket.emit('action',numb, last);
+			} else if(last == -1 && $("#in").val() === " ") {
+				socket.emit('winbypass',numb);
 			}
 		}
     	$("#in").val('');
     	return false;
 	});
 
-	socket.on('action1', function(hp,type) {
-		document.getElementById("hp2").style["width"] = ((Math.max(0,hp)/100)*15) + "%";
-		document.getElementById("hptext2").innerHTML = Number.parseFloat(Math.max(0,hp)).toPrecision(2) + "%";
-		console.log(Math.max(0,hp/100));
-		spawn(1,type);
-  	});
-
-	socket.on('action2', function(hp,type) {
-		document.getElementById("hp1").style["width"] = ((Math.max(0,hp)/100)*15) + "%";
-		document.getElementById("hptext1").innerHTML = Number.parseFloat(Math.max(0,hp)).toPrecision(2) + "%";
-		console.log(Math.max(0,hp/100));
-		spawn(2,type);
+	socket.on('action', function(numb, hp,type) {
+		var them = 2-(numb-1)
+		document.getElementById("hp"+them).style["width"] = ((Math.max(0,hp)/100)*15) + "%";
+		document.getElementById("hptext"+them).innerHTML = Number.parseFloat(Math.max(0,hp)).toPrecision(2) + "%";
+		spawn(numb,type);
   	});
 
 	socket.on('win', function(player) {
@@ -91,9 +87,11 @@
 		done = true
 		//clear()
 		if(player == 1) {
-			document.getElementById("hp2").style["display"] = "hidden"
+			document.getElementById("hp2").style["width"] = 0 + "%";
+			document.getElementById("hptext2").innerHTML = 0 + "%";
 		} else if(player == 2) {
-			document.getElementById("hp1").style["display"] = "hidden"
+			document.getElementById("hp1").style["width"] = 0 + "%";
+			document.getElementById("hptext1").innerHTML = 0 + "%";
 		}
   	});
 </script>

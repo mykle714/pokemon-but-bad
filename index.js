@@ -90,55 +90,59 @@ app.get('/queue',function(req,res){
 })
 
 app.post('/add', function(req, res) {
-  Pokemon.find({"name":req.body.name.toLowerCase()},function(err,pokemon){
-    if(pokemon.length == 0) {
-      request("https://pokeapi.co/api/v2/pokemon/"+req.body.name.toLowerCase(), function(err, res2, body) {
-        if(body === "Not Found") {
-          res.render('queue', {body: "invalid pokemon"})
-        } else {
-          var json = JSON.parse(body)
-          var i
-          var m = []
-          var json_m = json["moves"]
-          for(i=0; i < json_m.length; i++) {
-            m.push(json_m[i]["move"]["name"]);
-          }
-          var s = []
-          var json_s = json["stats"]
-          for(i=0; i < json_s.length; i++) {
-            s.push(json_s[i]["base_stat"]);
-          }
-          var t = []
-          var json_t = json["types"]
-          for(i=0; i < json_t.length; i++) {
-            t.push(json_t[i]["type"]["name"])
-          }
-          var pokemon = new Pokemon({
-            name: req.body.name.toLowerCase(),
-            height: json["height"],
-            moves: m,
-            url: json["sprites"]["front_default"],
-            stats: s,
-            types: t,
-            flags: {}
-          })
-
-          if(pokemon["url"] == null) {
-            pokemon["flags"]["nullURL"] = true
+  if(req.body.numb != "3") {
+    Pokemon.find({"name":req.body.name.toLowerCase()},function(err,pokemon){
+      if(pokemon.length == 0) {
+        request("https://pokeapi.co/api/v2/pokemon/"+req.body.name.toLowerCase(), function(err, res2, body) {
+          if(body === "Not Found") {
+            res.render('queue', {body: "invalid pokemon"})
           } else {
-            pokemon["flags"]["nullURL"] = false
-          }
+            var json = JSON.parse(body)
+            var i
+            var m = []
+            var json_m = json["moves"]
+            for(i=0; i < json_m.length; i++) {
+              m.push(json_m[i]["move"]["name"]);
+            }
+            var s = []
+            var json_s = json["stats"]
+            for(i=0; i < json_s.length; i++) {
+              s.push(json_s[i]["base_stat"]);
+            }
+            var t = []
+            var json_t = json["types"]
+            for(i=0; i < json_t.length; i++) {
+              t.push(json_t[i]["type"]["name"])
+            }
+            var pokemon = new Pokemon({
+              name: req.body.name.toLowerCase(),
+              height: json["height"],
+              moves: m,
+              url: json["sprites"]["front_default"],
+              stats: s,
+              types: t,
+              flags: {}
+            })
 
-          pokemon.save(function(err) {
-            if(err) throw err
-            res.render('form',{mon: pokemon})
-          })
-        }
-      })
-    } else {
-      res.render('form',{mon: pokemon[0]})
-    }
-  })
+            if(pokemon["url"] == null) {
+              pokemon["flags"]["nullURL"] = true
+            } else {
+              pokemon["flags"]["nullURL"] = false
+            }
+
+            pokemon.save(function(err) {
+              if(err) throw err
+              res.render('form',{mon: pokemon})
+            })
+          }
+        })
+      } else {
+        res.render('form',{mon: pokemon[0]})
+      }
+    })
+  } else {
+    res.redirect('/')
+  }
 });
 
 app.get('/register', function(req, res) {
@@ -166,28 +170,30 @@ app.get('/register', function(req, res) {
     }
 
     loop(4, function(i) {
-      Move.find({"name":players[numb]["moves"][i]},function(err,m){
-        if(m.length == 0) {
-          request("https://pokeapi.co/api/v2/move/"+players[numb]["moves"][i], function(err, res, body) {
-            temp = JSON.parse(body)
-            var move = new Move({
-              name: temp["name"],
-              power: temp["power"],
-              accuracy: temp["accuracy"],
-              priority: temp["priority"],
-              type: temp["type"]["name"],
-              class: temp["damage_class"]["name"],
-              pp: temp["pp"]
+      if(players[numb]["moves"][i] != "") {
+        Move.find({"name":players[numb]["moves"][i]},function(err,m){
+          if(m.length == 0) {
+            request("https://pokeapi.co/api/v2/move/"+players[numb]["moves"][i], function(err, res, body) {
+              temp = JSON.parse(body)
+              var move = new Move({
+                name: temp["name"],
+                power: temp["power"],
+                accuracy: temp["accuracy"],
+                priority: temp["priority"],
+                type: temp["type"]["name"],
+                class: temp["damage_class"]["name"],
+                pp: temp["pp"]
+              })
+              move.save(function(err) {
+                if(err) throw err
+                moves[numb][i] = move
+              })
             })
-            move.save(function(err) {
-              if(err) throw err
-              moves[numb][i] = move
-            })
-          })
-        } else {
-          moves[numb][i] = m[0]
-        }
-      })
+          } else {
+            moves[numb][i] = m[0]
+          }
+        })
+      }
     })
 
     res.redirect('/')
@@ -204,34 +210,26 @@ app.get('/pokemon', function(req, res) {
 var factor = 0.01
 
 io.on('connection', function(socket) {
-	socket.on('action1', function(index) {
-    var move = moves[1][index];
+  socket.on('action', function(numb, index) {
+    var you = numb-1
+    var them = 1 - you
+    var move = moves[you][index];
     var atk_type = move["type"]
-    var m = calc(atk_type, players[1]["types"])
-    players[1]["hp"] = players[1]["hp"] - factor*move["power"]*m
-    if(players[1]["hp"] > 0) {
-      io.emit('action1', players[1]["hp"],atk_type);
-    } else if(players[1]["hp"] <= 0) {
-      io.emit('win', 1);
+    var m = calc(atk_type, players[them]["types"])
+    players[them]["hp"] = players[them]["hp"] - factor*move["power"]*m
+    if(players[them]["hp"] > 0) {
+      io.emit('action', numb, players[them]["hp"],atk_type);
+    } else if(players[them]["hp"] <= 0) {
+      io.emit('win', numb);
     } else {
       console.log("index.js - action1")
-      console.log(players[1]["hp"])
+      console.log(players[them]["hp"])
     }
   });
-  socket.on('action2', function(index) {
-    var move = moves[1][index];
-    var atk_type = move["type"]
-    var m = calc(atk_type, players[0]["types"])
-    players[0]["hp"] = players[0]["hp"] - factor * move["power"] * m
-    if(players[0]["hp"] > 0) {
-      io.emit('action2', players[0]["hp"],atk_type);
-    } else if(players[0]["hp"] <= 0) {
-      io.emit('win', 2);
-    } else {
-      console.log("index.js - action2")
-      console.log(players[0]["hp"])
-    }
-  });
+
+  socket.on('winbypass', function(numb) {
+    io.emit('win', numb)
+  })
 });
 
 http.listen(process.env.PORT || 3000, function() {

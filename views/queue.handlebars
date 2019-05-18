@@ -4,6 +4,20 @@
         Name:
         <input type="text" name="name" id="">
         <br>
+        Player:
+		<br>
+		<input type="radio" name="numb" onchange="change();" value="1">1
+		<input type="radio" name="numb" onchange="change();" value="2">2
+		<input type="radio" name="numb" onchange="change();" value="3" default=checked>Spec
+		<br>
         <button type="submit">Submit</button>
     </form>
+
+    <script>
+		document.cookie = "numb=3;path=/battle"
+		function change() {
+			document.cookie = "numb="+document.querySelector('input[name="numb"]:checked').value +";path=/battle"
+			document.cookie = "numb="+document.querySelector('input[name="numb"]:checked').value +";path=/add"
+		}
+	</script>
 </body>

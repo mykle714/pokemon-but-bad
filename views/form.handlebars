@@ -6,11 +6,6 @@
 	{{/if}}
 	<br>
 	<form method="GET" action="/register">
-		Player:
-		<br>
-		<input type="radio" name="numb" onchange="change();" value="1">1
-		<input type="radio" name="numb" onchange="change();" value="2">2
-		<br>
 		Moves:
 		<br>
 		<input name="move1" list="moves">
@@ -22,6 +17,7 @@
 		<input name="move4" list="moves">
 		<br>
 		<input type="hidden" name="name" value="{{mon.name}}">
+		<input type="hidden" name="numb" id="numb">
 		<button type="submit" id="done">Done</button>
 	</form>
 
@@ -32,8 +28,17 @@
 	</datalist>
 
 	<script>
-		function change() {
-			document.cookie = "numb="+document.querySelector('input[name="numb"]:checked').value +";path=/battle"
+		var temp = document.cookie.split(";")
+		var temp2 = []
+		for(var i = 0; i< temp.length; i++) {
+			temp2.push(temp[i].split("="))
 		}
+		var numb
+		for(var i = 0; i < temp2.length; i++) {
+			if(temp2[i][0] === "numb") {
+				numb = temp2[i][1]
+			}
+		}
+		document.getElementById("numb").value = numb
 	</script>
 </body>
