@@ -226,10 +226,6 @@ io.on('connection', function(socket) {
       console.log(players[them]["hp"])
     }
   });
-
-  socket.on('winbypass', function(numb) {
-    io.emit('win', numb)
-  })
 });
 
 http.listen(process.env.PORT || 3000, function() {
